@@ -51,11 +51,11 @@ def yolo():
             if r:
                 frame_cropped = frame[tl_list[1]:br_list[1],tl_list[0]:br_list[0]]
                 start_time = time.time()
-                y,x,w = frame_cropped.shape
-                print(x,y)
+                y_frame,x_frame,w_frame = frame_cropped.shape
+                print(x_frame,y_frame)
                 # Only measure the time taken by YOLO and API Call overhead
 
-                dark_frame = Image(frame)
+                dark_frame = Image(frame_cropped)
                 results = net.detect(dark_frame)
                 del dark_frame
 
@@ -95,7 +95,7 @@ def yolo():
 
 
                     total_list.append([main_param,int(y - h / 2),int(y + h / 2)])
-                    item_space.append(int(y + h / 2)-int(y - h / 2))
+                    item_space.append(((int(y + h / 2)-int(y - h / 2))/y_frame)*100)
                     x_val.append([int(x - w / 2),int(x + w / 2)])
 
                     left_x = int(x - w / 2)
@@ -109,12 +109,31 @@ def yolo():
                     reg5 = (x_res / 2) + (x_res / 2.2)
                     reg6 = x_res
 
+                    #[width: , margin-left: ]
+
                     if left_x < reg1 and right_x > reg5:
-                        reg_decider.append(0)
+                        reg_decider.append(['100vw','0'])
 
                     elif left_x < reg2 and left_x > reg1 and right_x < reg3:
-                        reg_decider.append(1)
+                        reg_decider.append(['50vw','3%'])
 
+                    elif left_x > reg3 and right_x < reg5:
+                        reg_decider.append(['50vw''50%'])
+
+                    elif left_x > reg1 and left_x < reg2 and right_x < reg5 and right_x > reg4:
+                        reg_decider.append(['50vw','25%'])
+
+                    elif left_x > reg2 and right_x < reg4 :
+                        reg_decider.append(['50vw','25%'])
+
+                    elif left_x > reg1 and right_x < reg2:
+                        reg_decider.append(['50vw','3%'])
+
+                    elif left_x > reg4 and right_x < reg5:
+                        reg_decider.append(['50vw','25%'])
+
+                    else:
+                        reg_decider.append(6)
 
                 total_list.sort(key=itemgetter(1))
                 space_list = []
@@ -130,16 +149,16 @@ def yolo():
                     if i == 0:
 
                         space_list.append(total_list[i][1]-0)
-                        space_percent.append((space_list[0]/y)*100)
+                        space_percent.append((space_list[0]/y_frame)*100)
                         computer_res_fixture.append(x_res-(x_res/8)*space_percent[0])
                         space_list.append(total_list[i+1][1]-total_list[i][2])
-                        space_percent.append((space_list[i+1] / y) * 100)
+                        space_percent.append((space_list[i+1] / y_frame) * 100)
                         computer_res_fixture.append(x_res - (x_res / 8) * space_percent[i+1])
 
                     else:
 
                         space_list.append(total_list[i + 1][1] - total_list[i][2])
-                        space_percent.append((space_list[i + 1] / y) * 100)
+                        space_percent.append((space_list[i + 1] / y_frame) * 100)
                         computer_res_fixture.append((x_res - (x_res / 8)) * (space_percent[i+1]/100))
 
                         if label_turner == True:
@@ -147,7 +166,7 @@ def yolo():
 
                         if total_list[i][0] == 0 or total_list[i][0] == 1:
                             if space_percent[i+1] < 0 and total_list[i][0] != total_list[i+1][0] :
-                                content_list.append(html_headers.html_tools('style = margin-top: '+ computer_res_fixture[i]+ 'vh' )['input_text_label'])
+                                content_list.append(html_headers.html_tools('style = margin-top: '+ str(computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][2])['input_text_label'])
                                 label_turner = True
                                 continue
 
@@ -188,6 +207,49 @@ def yolo():
                             content_list.append(
                                 html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
                                     'input_textarea'])
+
+                        if i == (len(total_list)-1) :
+
+                            space_list.append(y_frame - total_list[i+1][2])
+                            space_percent.append((space_list[i + 2] / y_frame) * 100)
+                            computer_res_fixture.append((x_res - (x_res / 8)) * (space_percent[i + 2] / 100))
+
+                            if label_turner == True:
+                                continue
+
+                            if total_list[i+1][0] == 0:
+                                content_list.append(
+                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                                        'label'])
+
+                            elif total_list[i+1][0] == 1:
+                                content_list.append(
+                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                                        'input_text'])
+                            elif total_list[i+1][0] == 2:
+                                content_list.append(
+                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                                        'header'])
+                            elif total_list[i+1][0] == 3:
+                                content_list.append(
+                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                                        'block_text'])
+                            elif total_list[i+1][0] == 4:
+                                content_list.append(
+                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                                        'button'])
+                            elif total_list[i+1][0] == 5:
+                                content_list.append(
+                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                                        'image'])
+                            elif total_list[i+1][0] == 0:
+                                content_list.append(
+                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                                        'paragraph'])
+                            else:
+                                content_list.append(
+                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
+                                        'input_textarea'])
 
                 print(space_percent)
 
