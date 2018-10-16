@@ -13,14 +13,14 @@ import numpy as np
 img = None
 tl_list = (2,2)
 br_list = (2,2)
-label = 0
-text = 1
-header = 2
-block_text = 3
-button = 4
-image = 5
-paragraph = 6
-textarea = 7
+# label = 0
+# text = 1
+# header = 2
+# block_text = 3
+# button = 4
+# image = 5
+# paragraph = 6
+# textarea = 7
 x_res,y_res = size()
 
 
@@ -95,7 +95,7 @@ def yolo():
 
 
                     total_list.append([main_param,int(y - h / 2),int(y + h / 2)])
-                    item_space.append(((int(y + h / 2)-int(y - h / 2))/y_frame)*100)
+                    item_space.append(absoluter(((int(y + h / 2)-int(y - h / 2))/y_frame)*100))
                     x_val.append([int(x - w / 2),int(x + w / 2)])
 
                     left_x = int(x - w / 2)
@@ -151,9 +151,143 @@ def yolo():
                         space_list.append(total_list[i][1]-0)
                         space_percent.append((space_list[0]/y_frame)*100)
                         computer_res_fixture.append(x_res-(x_res/8)*space_percent[0])
+                        if label_turner == True:
+                            continue
+
+                        if total_list[i][0] == 0 or total_list[i][0] == 1:
+                            if space_percent[i+1] < 0 and total_list[i][0] != total_list[i+1][0] :
+                                content_list.append(html_headers.html_tools('style = width: '+ reg_decider[i][0] + ';' + ' height: '+ str(item_space) + '% ;' + ' margin-top: '+ str(computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])['input_text_label'])
+                                label_turner = True
+                                continue
+
+                        if total_list[i][0] == 0 or total_list[i][0] == 7:
+                            if space_percent[i + 1] < 0 and total_list[i][0] != total_list[i + 1][0]:
+                                content_list.append(html_headers.html_tools(
+                                    'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                        item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                        computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])['input_textarea_label'])
+                                label_turner = True
+                                continue
+
+                        if total_list[i][0] == 0 :
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                    item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])['label'])
+
+                        elif total_list[i][0] == 1:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                    item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])[
+                                    'input_text'])
+                        elif total_list[i][0] == 2:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                    item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])[
+                                    'header'])
+                        elif total_list[i][0] == 3:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                    item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])[
+                                    'block_text'])
+                        elif total_list[i][0] == 4:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                    item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])[
+                                    'button'])
+                        elif total_list[i][0] == 5:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                    item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])[
+                                    'image'])
+                        elif total_list[i][0] == 0:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                    item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])[
+                                    'paragraph'])
+                        else:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                    item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])[
+                                    'input_textarea'])
+
                         space_list.append(total_list[i+1][1]-total_list[i][2])
                         space_percent.append((space_list[i+1] / y_frame) * 100)
-                        computer_res_fixture.append(x_res - (x_res / 8) * space_percent[i+1])
+                        computer_res_fixture.append(absoluter(x_res - (x_res / 8) * space_percent[i+1]))
+
+                        if label_turner == True:
+                            continue
+
+                        if total_list[i+1][0] == 0 or total_list[i+1][0] == 1:
+                            if space_percent[i+1] < 0 and total_list[i][0] != total_list[i+1][0] :
+                                content_list.append(html_headers.html_tools('style = width: '+ reg_decider[i][0] + ';' + ' height: '+ str(item_space) + '% ;' + ' margin-top: '+ str(computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])['input_text_label'])
+                                label_turner = True
+                                continue
+
+                        if total_list[i+1][0] == 0 or total_list[i+1][0] == 7:
+                            if space_percent[i + 1] < 0 and total_list[i][0] != total_list[i + 1][0]:
+                                content_list.append(html_headers.html_tools(
+                                    'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                        item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                        computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])['input_textarea_label'])
+                                label_turner = True
+                                continue
+
+                        if total_list[i+1][0] == 0 :
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])['label'])
+
+                        elif total_list[i+1][0] == 1:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
+                                    'input_text'])
+                        elif total_list[i+1][0] == 2:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
+                                    'header'])
+                        elif total_list[i+1][0] == 3:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
+                                    'block_text'])
+                        elif total_list[i+1][0] == 4:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
+                                    'button'])
+                        elif total_list[i+1][0] == 5:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
+                                    'image'])
+                        elif total_list[i+1][0] == 0:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
+                                    'paragraph'])
+                        else:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
+                                    'input_textarea'])
 
                     else:
 
@@ -164,92 +298,112 @@ def yolo():
                         if label_turner == True:
                             continue
 
-                        if total_list[i][0] == 0 or total_list[i][0] == 1:
+                        if total_list[i+1][0] == 0 or total_list[i+1][0] == 1:
                             if space_percent[i+1] < 0 and total_list[i][0] != total_list[i+1][0] :
-                                content_list.append(html_headers.html_tools('style = margin-top: '+ str(computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][2])['input_text_label'])
+                                content_list.append(html_headers.html_tools('style = width: '+ reg_decider[i][0] + ';' + ' height: '+ str(item_space) + '% ;' + ' margin-top: '+ str(computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])['input_text_label'])
                                 label_turner = True
                                 continue
 
-                        if total_list[i][0] == 0 or total_list[i][0] == 7:
+                        if total_list[i+1][0] == 0 or total_list[i+1][0] == 7:
                             if space_percent[i + 1] < 0 and total_list[i][0] != total_list[i + 1][0]:
-                                content_list.append(html_headers.html_tools('style = margin-top: '+ computer_res_fixture[i]+ 'vh')['input_textarea_label'])
+                                content_list.append(html_headers.html_tools(
+                                    'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                        item_space[i]) + '% ;' + ' margin-top: ' + str(
+                                        computer_res_fixture[i]) + 'vh ; margin-left: ' + reg_decider[i][1])['input_textarea_label'])
                                 label_turner = True
                                 continue
 
-                        if total_list[i][0] == 0 :
-                            content_list.append(html_headers.html_tools('style = margin-top: '+ computer_res_fixture[i]+ 'vh')['label'])
+                        if total_list[i+1][0] == 0 :
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])['label'])
 
-                        elif total_list[i][0] == 1:
-                            content_list.append(
-                                html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
+                        elif total_list[i+1][0] == 1:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
                                     'input_text'])
-                        elif total_list[i][0] == 2:
-                            content_list.append(
-                                html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
+                        elif total_list[i+1][0] == 2:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
                                     'header'])
-                        elif total_list[i][0] == 3:
-                            content_list.append(
-                                html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
+                        elif total_list[i+1][0] == 3:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
                                     'block_text'])
-                        elif total_list[i][0] == 4:
-                            content_list.append(
-                                html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
+                        elif total_list[i+1][0] == 4:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
                                     'button'])
-                        elif total_list[i][0] == 5:
-                            content_list.append(
-                                html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
+                        elif total_list[i+1][0] == 5:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
                                     'image'])
-                        elif total_list[i][0] == 0:
-                            content_list.append(
-                                html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
+                        elif total_list[i+1][0] == 0:
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
                                     'paragraph'])
                         else:
-                            content_list.append(
-                                html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
+                            content_list.append(html_headers.html_tools(
+                                'style = width: ' + reg_decider[i+1][0] + ';' + ' height: ' + str(
+                                    item_space[i+1]) + '% ;' + ' margin-top: ' + str(
+                                    computer_res_fixture[i+1]) + 'vh ; margin-left: ' + reg_decider[i+1][1])[
                                     'input_textarea'])
 
-                        if i == (len(total_list)-1) :
-
-                            space_list.append(y_frame - total_list[i+1][2])
-                            space_percent.append((space_list[i + 2] / y_frame) * 100)
-                            computer_res_fixture.append((x_res - (x_res / 8)) * (space_percent[i + 2] / 100))
-
-                            if label_turner == True:
-                                continue
-
-                            if total_list[i+1][0] == 0:
-                                content_list.append(
-                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
-                                        'label'])
-
-                            elif total_list[i+1][0] == 1:
-                                content_list.append(
-                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
-                                        'input_text'])
-                            elif total_list[i+1][0] == 2:
-                                content_list.append(
-                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
-                                        'header'])
-                            elif total_list[i+1][0] == 3:
-                                content_list.append(
-                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
-                                        'block_text'])
-                            elif total_list[i+1][0] == 4:
-                                content_list.append(
-                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
-                                        'button'])
-                            elif total_list[i+1][0] == 5:
-                                content_list.append(
-                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
-                                        'image'])
-                            elif total_list[i+1][0] == 0:
-                                content_list.append(
-                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
-                                        'paragraph'])
-                            else:
-                                content_list.append(
-                                    html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
-                                        'input_textarea'])
+                        # if i == (len(total_list)-1) :
+                        #
+                        #     space_list.append(y_frame - total_list[i+1][2])
+                        #     space_percent.append((space_list[i + 2] / y_frame) * 100)
+                        #     computer_res_fixture.append((x_res - (x_res / 8)) * (space_percent[i + 2] / 100))
+                        #
+                        #     if label_turner == True:
+                        #         continue
+                        #
+                        #     if total_list[i+1][0] == 0:
+                        #         content_list.append(
+                        #             html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                        #                 'label'])
+                        #
+                        #     elif total_list[i+1][0] == 1:
+                        #         content_list.append(
+                        #             html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                        #                 'input_text'])
+                        #     elif total_list[i+1][0] == 2:
+                        #         content_list.append(
+                        #             html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                        #                 'header'])
+                        #     elif total_list[i+1][0] == 3:
+                        #         content_list.append(
+                        #             html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                        #                 'block_text'])
+                        #     elif total_list[i+1][0] == 4:
+                        #         content_list.append(
+                        #             html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                        #                 'button'])
+                        #     elif total_list[i+1][0] == 5:
+                        #         content_list.append(
+                        #             html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                        #                 'image'])
+                        #     elif total_list[i+1][0] == 0:
+                        #         content_list.append(
+                        #             html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i+1] + 'vh')[
+                        #                 'paragraph'])
+                        #     else:
+                        #         content_list.append(
+                        #             html_headers.html_tools('style = margin-top: ' + computer_res_fixture[i] + 'vh')[
+                        #                 'input_textarea'])
 
                 print(space_percent)
 
@@ -333,5 +487,10 @@ def targeter(image):
         bbox = plt.connect('key_press_event', toggle_selector)
         key = plt.connect('key_press_event', onkeypress)
         plt.show()
+
+
+def absoluter(number):
+    fin = number - ( number % 5)
+    return fin
 
 yolo()
